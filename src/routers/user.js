@@ -11,12 +11,16 @@ router.post('/users', async (req, res) => {
     const user = new User(req.body)
 
     try {
+        const checkMail = await User.find({ email: req.body.email })
+        if (checkMail.length > 0) {
+            return res.status(404).send({ 'success': false, 'message': 'Entered email is already registered!' })
+        }
         await user.save()
         sendWelcomeEmail(user.email, user.name)
         const token = await user.generateAuthToken()
-        res.status(201).send({ user, token })
+        res.status(201).send({ 'success': true, user, token })
     } catch (error) {
-        res.status(400).send(error)
+        res.status(400).send({ 'success': false, 'message': error.message })
     }
 })
 
