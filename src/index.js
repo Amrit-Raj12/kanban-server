@@ -3,6 +3,8 @@ require('./db/mongoose')
 const userRouter = require('./routers/user')
 // const taskRouter = require('./routers/task')
 const dotenv = require('dotenv')
+const cors = require('cors')
+const morgan = require('morgan')
 
 dotenv.config()
 
@@ -10,7 +12,9 @@ dotenv.config()
 const app = express()
 const port = process.env.PORT || 5000
 
-
+app.use(cors())
+app.use(express.json())
+app.use(morgan('tiny'))
 app.use(express.json())
 app.use(userRouter)
 
